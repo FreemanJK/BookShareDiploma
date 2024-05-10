@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from "../components/Layout/Layout";
 import { Tab, Tabs, Box, TextField, Radio, RadioGroup, FormControlLabel, Button, Typography, Card, CardContent, CardMedia,  Dialog, DialogTitle, DialogContent, DialogActions, } from '@mui/material';
 import { styled } from '@mui/system';
@@ -71,8 +71,8 @@ function AddBookForm({addBook}) {
             formData.append('contactPhone', contactPhone);
             formData.append('bookImage', bookImage);
             formData.append('userName', currentUser.login);
-            console.log(formData)
-            const response = await fetch('http://localhost:8000/new_book', {
+            console.log("formData", formData.has("bookTitle"))
+            const response = await fetch('http://localhost:8000/new_book/', {
                 method: 'POST',
                 body: formData,
             });
@@ -86,13 +86,13 @@ function AddBookForm({addBook}) {
     const handleSubmit = (e) => {
         e.preventDefault();
         // Handle form submission
+        handleNewBook();
         addBook({
             id: 6,
             title: bookTitle,
             image: bookImage,
             contactPhone
         })
-        handleNewBook();
         console.log(bookTitle, saleOrExchange, price, contactPhone, bookImage);
     };
     
@@ -100,6 +100,7 @@ function AddBookForm({addBook}) {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            console.log("file", file)
             setBookImage(file);
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -108,10 +109,12 @@ function AddBookForm({addBook}) {
             reader.readAsDataURL(file);
         }
     };
+    
+
 
     return (
         <Box sx={{ width: "100%", display: "flex", flexDirection: "row", gap: "16px" }} >
-            <form style={{ width: "40%" }} onSubmit={handleSubmit}>
+            <form style={{ width: "40%" }} enctype="multipart/form-data" onSubmit={handleSubmit}>
                 <TextField
                     label="Название книги"
                     value={bookTitle}
@@ -152,6 +155,7 @@ function AddBookForm({addBook}) {
                 />
                 <input
                     type="file"
+                    name="bookImage"
                     onChange={handleImageChange}
                     accept="image/*"
                     style={{ display: 'none' }}
@@ -251,10 +255,35 @@ function BookList({ books, setBooks, addBook }) {
         setOpen(false);
     };
 
+    const [getbooks, setGetBooks] = useState([]);
+    
+    // другой код
+
+    useEffect(() => {
+        fetch('http://localhost:8000/get_books')
+            .then(response => response.json())
+            .then(data => setGetBooks(data))
+            .catch(error => console.error(error));
+    }, []);
     return (
         <Box sx={{ display: "flex", flexDirection: "row", flexWrap: 'wrap' }}>
             {books.map((book) => (
-                <Card key={book.id} sx={{ display: 'flex', marginBottom: 2, width: "480px" }}>
+                <Card key={book.id} sx={{ display: 'flex', marginBottom: 2, marginRight: 2, width: "480px" }}>
+                    <CardMedia
+                        component="img"
+                        sx={{ width: 150, objectFit: 'cover' }}
+                        image={book.image}
+                        alt={book.title}
+                    />
+                    <CardContent>
+                        <Typography variant="h6" component="div">{book.title}</Typography>
+                        <Typography variant="body2" color="text.secondary">{book.contactPhone}</Typography>
+                        <Button onClick={() => handleClickOpen(book)}>Связаться</Button>
+                    </CardContent>
+                </Card>
+            ))}
+            {getbooks.map((book) => (
+                <Card key={book.id} sx={{ display: 'flex', marginBottom: 2,marginRight: 2, width: "480px" }}>
                     <CardMedia
                         component="img"
                         sx={{ width: 150, objectFit: 'cover' }}

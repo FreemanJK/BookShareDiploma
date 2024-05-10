@@ -12,7 +12,7 @@ function LoginPage() {
     const { setIsLogin, setCurrentUser } = useAuth();
 
     const handleLogin = () => {
-        fetch('http://127.0.0.1:8000/users/login/', {
+        fetch('http://localhost:8000/login/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -83,7 +83,7 @@ function LoginPage() {
                     style={{padding: '10px', marginBottom: '20px', width: '100%'}}
                 />
                 <Box sx={{width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between", }}>
-                    <Button onClick={handleLogin} sx={{padding: '10px 20px', cursor: 'pointer',
+                    <Button onClick={()=>navigate("/register")} sx={{padding: '10px 20px', cursor: 'pointer',
                         textTransform: "none", color: "blue"
                     }}>
                         Регистрация
