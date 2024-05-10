@@ -3,6 +3,7 @@ import BookList from "../components/dashboard/dashboard";
 import Layout from "../components/Layout/Layout";
 import Button from "@mui/material/Button";
 import MyBooks from "../components/MyBooks/MyBooks";
+import HeroBlock from '../components/HeroBlock/HeroBlock';
 
 function HomePage() {
     const [activeTab, setActiveTab] = useState('feed');
@@ -10,7 +11,7 @@ function HomePage() {
     return (
         <Layout>
             <div style={{padding: '20px'}}>
-                <h1>Главная страница</h1>
+                <HeroBlock />
                 <nav style={{marginBottom: '20px', display: 'flex', gap: '10px'}}>
                     <Button
                         variant="outlined"

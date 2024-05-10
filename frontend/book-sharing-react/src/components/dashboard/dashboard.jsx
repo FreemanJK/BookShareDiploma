@@ -20,7 +20,7 @@ const BookList = () => {
                 <BookCard
                     key={book.id}
                     title={book.volumeInfo.title}
-                    author={book.volumeInfo.authors.join(', ')}
+                    author={book.volumeInfo.authors}
                     cover={book.volumeInfo.imageLinks?.thumbnail}
                     description={book.volumeInfo.description}
                     onDetails={() => window.open(book.volumeInfo.previewLink, "_blank")}

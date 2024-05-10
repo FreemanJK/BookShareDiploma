@@ -9,14 +9,35 @@ function LoginPage() {
     const navigate = useNavigate();
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
-    const { setIsLogin } = useAuth();
+    const { setIsLogin, setCurrentUser } = useAuth();
 
     const handleLogin = () => {
-        console.log(login, password);
-        setIsLogin(true);
-        navigate("/")
+        fetch('http://127.0.0.1:8000/users/login/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: login,
+                password: password
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                setIsLogin(true)
+                setCurrentUser({login})
+                navigate("/");
+            } else {
+                throw new Error('Failed to login');
+            }
+        })
+        .catch(error => {
+            console.error('Login error:', error);
+            // Handle error, e.g. show error message
+        });
     };
 
+    
     return (
         <div style={{
             backgroundImage: "linear-gradient(135deg, white,darkblue, lightgreen )",
